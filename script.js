@@ -18,7 +18,29 @@ function createBook(title, author, pages, read)
 }
 
 
+Book.prototype.toggle = function (book, btn) {
+  if(btn.classList.contains("book-read"))
+  {
+    btn.classList.remove("book-read");
+    btn.classList.add("book-not-read");
+    btn.textContent = "Not Read";
+    book.read = false;
+  }
+  else
+  {
 
+    btn.classList.remove("book-not-read");
+    btn.classList.add("book-read");
+    btn.textContent = "Read";
+    book.read = true;
+  }
+}
+
+Book.prototype.remove = function(i) {
+   myBooks.splice(i, 1);
+         displayBooks();
+      
+}
 
 function displayBooks() 
 {
@@ -47,7 +69,7 @@ function action(title, author, pages, read)
   // fig out
   createBook(title, author, pages, read);
   displayBooks();
-  
+
  
 }
 
@@ -58,28 +80,12 @@ function config()
   
   readButtons.forEach((btn) => {
   btn.addEventListener('click', () => {
-    if (btn.classList.contains("book-read")) {
-      btn.classList.remove('book-read');
-      btn.classList.add('book-not-read');
-      btn.textContent = "Not Read";
-      for(let book of myBooks)
+    for(let book of myBooks)
+    {
+      if(btn.dataset.id === book.id)
       {
-        if(btn.dataset.id === book.id)
-        {
-          book.read = false;
-        }
-      }
-      console.log(btn.id);
-    } else {
-      btn.classList.remove('book-not-read');
-      btn.classList.add('book-read');
-      btn.textContent = "Read";
-      for(let book of myBooks)
-      {
-        if(btn.dataset.id === book.id)
-        {
-          book.read = true;
-        }
+        book.toggle(book, btn);
+        break;
       }
     }
 
@@ -94,9 +100,7 @@ function config()
     {
       if(myBooks[i].id === btn.dataset.id)
       {
-        myBooks.splice(i, 1);
-         displayBooks();
-        break;
+        myBooks[i].remove(i);
       }
     }
 
@@ -138,5 +142,6 @@ closeButton.addEventListener("click", () => {
   document.querySelector("#pages").value = "";
   dialog.close();
 });
+
 
 
