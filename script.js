@@ -1,46 +1,58 @@
 const myBooks = [];
-action("The Great Gatsby", "F. Scott Fitzgerald", 234, true);
-action("The Kite Runner", "Khaled Hosseini", 543, false);
-function Book(title, author, pages, read)
-{
-  this.title = title;
-  this.author = author;
-  this.pages = pages;
-  this.read = read;
-  this.id = crypto.randomUUID();
-}
 
-function createBook(title, author, pages, read) 
+class Book 
 {
-  const book = new Book(title, author, pages, read);
+  constructor(title, author, pages, read)
+  {
+    this.title = title;
+    this.author = author;
+    this.pages = pages;
+    this.read = read;
+    this.id = crypto.randomUUID();
+  }
+
+  toggle(book, btn)
+  {
+    if(btn.classList.contains("book-read"))
+    {
+           btn.classList.remove("book-read");
+           btn.classList.add("book-not-read");
+           btn.textContent = "Not Read";
+           book.read = false;
+   }
+         else
+        {
+
+          btn.classList.remove("book-not-read");
+          btn.classList.add("book-read");
+          btn.textContent = "Read";
+           book.read = true;
+        }
+    }
+
+  removeBook(i)
+  {
+      myBooks.splice(i, 1);
+      displayBooks();
+  }
+  static addBook(title, author, pages, read)
+  {
+      const book = new Book(title, author, pages, read);
  
-  myBooks.push(book);
-}
+      myBooks.push(book);
 
+      displayBooks();
 
-Book.prototype.toggle = function (book, btn) {
-  if(btn.classList.contains("book-read"))
-  {
-    btn.classList.remove("book-read");
-    btn.classList.add("book-not-read");
-    btn.textContent = "Not Read";
-    book.read = false;
+    
   }
-  else
-  {
 
-    btn.classList.remove("book-not-read");
-    btn.classList.add("book-read");
-    btn.textContent = "Read";
-    book.read = true;
-  }
+
 }
 
-Book.prototype.remove = function(i) {
-   myBooks.splice(i, 1);
-         displayBooks();
-      
-}
+Book.addBook("The Great Gatsby", "F. Scott Fitzgerald", 234, true);
+Book.addBook("The Kite Runner", "Khaled Hosseini", 543, false);
+displayBooks();
+
 
 function displayBooks() 
 {
@@ -67,7 +79,7 @@ function displayBooks()
 function action(title, author, pages, read)
 {
   // fig out
-  createBook(title, author, pages, read);
+  Book.addBook(title, author, pages, read);
   displayBooks();
 
  
@@ -100,7 +112,7 @@ function config()
     {
       if(myBooks[i].id === btn.dataset.id)
       {
-        myBooks[i].remove(i);
+        myBooks[i].removeBook(i);
       }
     }
 
